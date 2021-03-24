@@ -11,7 +11,7 @@
     <title>Contacts</title>
   </head>
   <body>
-    <h1>Contacts page</h1>
+    <h1>Contacts</h1>
 
     <!-- Optional JavaScript; choose one of the two! -->
 
