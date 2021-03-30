@@ -23,14 +23,12 @@ use App\Http\Controllers\NewsCategoryController;
 |
 */
 
-// for admin 
+// for admin
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::resource('categories', AdminNewsCategoryController::class);
-    Route::resource('news', AdminNewsController::class);
+    Route::resource('/categories', AdminNewsCategoryController::class);
+    Route::resource('/news', AdminNewsController::class);
 });
 
-
-Route::get('/welcome', [WelcomeController::class, 'index']);
 Route::get('/categories', [NewsCategoryController::class, 'index']);
 Route::get('/news', [NewsController::class, 'index'])->name('news');
 Route::get('/news/show/{id}', [NewsController::class, 'show'])->where('id', '\d+')->name('news.show');

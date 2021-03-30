@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 class NewsController extends Controller
 {
     //
-    public function index()
+
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
     {
-        return view('news', ['newsList' => $this->newsList]);
+        return view('news.index', ['newsList' => $this->newsList]);
     }
-    public function show(int $id)
-    { 
+    public function show(int $id): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
+    {
         $news = $this->newsList[$id];
-        return "<h2> $news </h2>";
+        return view('news.show', ['news' => $news]);
     }
 }
