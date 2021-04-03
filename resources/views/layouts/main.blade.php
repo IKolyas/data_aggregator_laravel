@@ -20,6 +20,7 @@
 
 <body>
 <x-site-header></x-site-header>
+
 <!-- Page Content -->
 <div class="container">
 
@@ -49,6 +50,7 @@
 
 <script src="{{asset('assets/news/vendor/jquery/jquery.min.js')}}"></script>
 <script src="{{asset('assets/news/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="https://use.fontawesome.com/9a9ee976fc.js"></script>
 
 </body>
 

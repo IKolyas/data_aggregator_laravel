@@ -3,8 +3,8 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        <h1 class="h3 mb-0 text-gray-800">Все новости</h1>
+        <a href="{{ route('admin.news.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Добавить </a>
     </div>
 
@@ -24,7 +24,9 @@
                 <tr>
                     <th scope="row">{{$key}}</th>
                     <td>Category</td>
-                    <td>{{$news['title']}}</td>
+                    <td>
+                        <a href="{{ route('admin.news.show', $key) }}"> {{ $news['title'] }} </a>
+                    </td>
                     <td>{{now()}}</td>
                     <td>
                         <a href="#">

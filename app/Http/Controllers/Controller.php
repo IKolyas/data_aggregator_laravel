@@ -30,4 +30,10 @@ class Controller extends BaseController
         ],
 
     ];
+    protected array $categoryList = [
+        'Общество',
+        'Политика',
+        'Экономика'
+    ];
+
 }

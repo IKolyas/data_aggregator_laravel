@@ -1,8 +1,3 @@
-{{--@forelse($newsList as $key => $news)--}}
-{{--    <h2> {{$news}} </h2> <a href='{{ route(' news.show', ['id' => $key]) }}'> show </a>--}}
-{{--@empty--}}
-{{--    <h2>Нет новостей</h2>--}}
-{{--@endforelse--}}
 @extends('layouts.main')
 @section('content')
     <h1 class="my-4">Лента новостей
