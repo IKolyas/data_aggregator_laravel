@@ -11,7 +11,6 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsCategoryController;
 
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes

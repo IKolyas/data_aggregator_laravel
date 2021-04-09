@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class NewsCategoryController extends Controller
 {
     //
-    public function index(): string
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
     {
-        return "<h2>Страница категорий новостей</h2>";
+        $categories = (new Category())->getCategories();
+        return view('news.index', ['categories' => $categories]);
     }
 }

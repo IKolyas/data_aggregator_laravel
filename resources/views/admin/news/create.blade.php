@@ -13,9 +13,9 @@
             @csrf
             <div class="form-group">
                 <label for="formCategory">Категория</label>
-                <select id="formCategory" class="form-control" name="newsCategory" required>
-                    @forelse($categoryList as $category)
-                        <option>{{ $category }}</option>
+                <select id="formCategory" class="form-control" name="category_id" required>
+                    @forelse($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->title }}</option>
                     @empty
                         <option selected>нет категорий ...</option>
                     @endforelse
@@ -23,18 +23,13 @@
             </div>
             <div class="form-group">
                 <label for="formTitle">Заголовок(тема) новости</label>
-                <input type="text" class="form-control" id="formTitle" name="newsTitle" value="{{ old('newsTitle') }}"
+                <input type="text" class="form-control" id="formTitle" name="title" value="{{ old('title') }}"
                        required>
             </div>
             <div class="form-group">
                 <label for="formDescription">Текст новости</label>
-                <input type="text" class="form-control" id="formDescription" name="newsDescription"
-                       value="{{ old('newsDescription') }}">
-            </div>
-            <div class="form-group">
-                <label for="formDateCreate">Дата создания</label>
-                <input type="date" class="form-control" id="formDateCreate" name="newsDateCreate"
-                       value="{{ date("Y-m-d") }}" required>
+                <input type="text" class="form-control" id="formDescription" name="description"
+                       value="{{ old('description') }}">
             </div>
             <button type="submit" class="btn btn-primary">Добавить</button>
         </form>
