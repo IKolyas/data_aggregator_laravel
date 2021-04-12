@@ -9,12 +9,17 @@
     </div>
 
     <div class="row">
+        @if (session()->has('success'))
+            <div class="alert alert-success"> {{session()->get('success')}} </div>
+        @endif
         <table class="table table-striped table-hover">
             <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Категория</th>
                 <th scope="col">Тема</th>
+                <th scope="col">Слаг</th>
+                <th scope="col">Картинка</th>
                 <th scope="col">Дата создания</th>
                 <th scope="col">Дата обновления</th>
                 <th scope="col">Инструменты</th>
@@ -24,25 +29,26 @@
             @forelse($newsList as $news)
                 <tr>
                     <th scope="row">{{$news->id}}</th>
-                    <td>{{ $news->category_title }}</td>
+                    <td>{{ $news->category->title }}</td>
                     <td>
-                        <a href="{{ route('admin.news.show', $news->id) }}"> {{ $news->title }} </a>
+                        <a href="{{ route('admin.news.show', $news) }}"> {{ $news->title }} </a>
                     </td>
+                    <td>{{ $news->slug }}</td>
+                    <td>{{ $news->image }}</td>
                     <td>{{ $news->created_at }}</td>
                     <td>{{ $news->updated_at }}</td>
                     <td>
-                        <a href="#">
-                            Редактировать
-                        </a>
-                        &nbsp;
-                        <a href="#">
-                            Удалить
-                        </a></td>
+                    <td>
+                        <a href="{{ route('admin.news.edit', $news) }}"><i class="fa fa-pencil text-success" aria-hidden="true"></i></a>
+                        <button type="button" class="btn btn-link" onclick="destroyModel('news', {{ $news->id }})"><i class="fa fa-trash text-danger" aria-hidden="true"></i></button>
+                    </td>
+                    </td>
                 </tr>
             @empty
                 <td colspan="5" class="table-active">Список новостей пуст ...</td>
             @endforelse
             </tbody>
         </table>
+            <div>{{$newsList->links()}}</div>
     </div>
 @endsection

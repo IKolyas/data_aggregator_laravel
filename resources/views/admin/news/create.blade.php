@@ -27,9 +27,13 @@
                        required>
             </div>
             <div class="form-group">
+                <label for="formImage">Картинка</label>
+                <input type="text" class="form-control" id="formImage" name="image" value="{{ old('image') }}"
+                       required placeholder="Ссылка на картинку">
+            </div>
+            <div class="form-group">
                 <label for="formDescription">Текст новости</label>
-                <input type="text" class="form-control" id="formDescription" name="description"
-                       value="{{ old('description') }}">
+                <textarea type="text" class="form-control" id="formDescription" name="description"> {{ old('description') }} </textarea>
             </div>
             <button type="submit" class="btn btn-primary">Добавить</button>
         </form>

@@ -14,17 +14,23 @@
             </div>
             <div class="card-footer text-muted">
                 <span>Дата добавления: {{ $news->created_at }}</span>
-                <span class="mx-2">Категория: {{ $news->category_title }}</span>
+                <span class="mx-2">Категория: {{ $news->category->title }}</span>
             </div>
         </div>
     @empty
         <h2>Список новостей пуст</h2>
     @endforelse
+    <div>{{$newsList->links()}}</div>
 @endsection
 @section('categories')
     @forelse($categories as $category)
         <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action list-group-item-info my-1">{{ $category->title }}</a>
+            <a
+                href="{{ route('categories.show', ['id' => $category->id]) }}"
+                class="list-group-item list-group-item-action list-group-item-info my-1 {{ (request()->is('categories/show/' . $category->id)) ? 'active' : '' }}"
+            >
+                {{ $category->title }} <b>({{$category->news_count}})</b>
+            </a>
         </div>
     @empty
     @endforelse

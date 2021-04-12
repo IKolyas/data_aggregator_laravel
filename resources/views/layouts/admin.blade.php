@@ -17,6 +17,7 @@
     <!-- Custom styles for this template-->
     <link href="{{asset('assets/admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
 
+
 </head>
 
 <body id="page-top">
@@ -101,7 +102,10 @@
 <!-- Page level custom scripts -->
 <script src="{{asset('assets/admin/js/demo/chart-area-demo.js')}}"></script>
 <script src="{{asset('assets/admin/js/demo/chart-pie-demo.js')}}"></script>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://use.fontawesome.com/9a9ee976fc.js"></script>
+<script src="{{asset('assets/admin/js/destroyModels.js')}}"></script>
 </body>
 
 </html>

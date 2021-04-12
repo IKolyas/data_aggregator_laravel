@@ -4,23 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\News;
+use \Illuminate\Contracts\View\View;
 
 class NewsController extends Controller
 {
     //
 
-    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
+    public function index(): View
     {
-        $categories = (new Category())->getCategories();
-        $newsList = (new News())->getNews();
+        $categories = Category::select(['id', 'title'])->where('is_visible', '=', true)->withCount('news')->get();
+        $newsList = News::whereHas('category', function ($query) {
+            $query->where('is_visible', '=', true);
+        })->with('category')->paginate(5);
         return view('news.index', [
             'newsList' => $newsList,
-            'categories' => $categories
-            ]);
+            'categories' => $categories,
+        ]);
     }
-    public function show(int $id): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
+
+    public function show(int $id): View
     {
-        $news = (new News())->getNewsById($id);
-        return view('news.show', ['news' => $news]);
+        $categories = Category::select(['id', 'title'])->where('is_visible', '=', true)->withCount('news')->get();
+        $news = News::findOrFail($id);
+        return view('news.show', [
+            'news' => $news,
+            'categories' => $categories
+        ]);
     }
 }
