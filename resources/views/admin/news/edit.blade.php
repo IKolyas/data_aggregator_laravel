@@ -16,7 +16,7 @@
                 <label for="formCategory">Категория</label>
                 <select id="formCategory" class="form-control" name="category_id" required>
                     @forelse($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                            <option value="{{$category->id}}" @if ($news->category_id == $category->id) selected @endif>{{ $category->title }}</option>
                     @empty
                         <option selected>нет категорий ...</option>
                     @endforelse
@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label for="formImage">Картинка</label>
                 <input type="text" class="form-control" id="formImage" name="image" value="{{ $news->image }}"
-                       required placeholder="Ссылка на картинку">
+                       placeholder="Ссылка на картинку">
             </div>
             <div class="form-group">
                 <label for="formDescription">Текст новости</label>

@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\News
@@ -29,19 +32,42 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|News whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|News whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|News whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static list(bool $isAdmin = false)
+ * @mixin Eloquent
  */
 class News extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
 
     protected $table = 'news';
+
     protected $fillable = [
-        'category_id', 'title', 'slug',  'image', 'description'
+         'title', 'slug',  'image', 'description'
     ];
+
+    //добавил "мягкое удаление" (при удалении в поле deleted_at добавляется дата удаления но сам объект не ужаляется из базы,
+    //объекты с полем deleted_at отличным от null игнорируются при выборках)
+    protected $dates = ['deleted_at'];
+
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class)->withDefault();
+    }
+
+
+    public function scopeList($query, $isAdmin = false): Builder
+    {
+        if ($isAdmin) {
+            return $query
+                ->with('category')
+                ->select(['id', 'category_id', 'title', 'description', 'slug', 'image', 'created_at', 'updated_at']);
+        }
+        return $query
+            ->with('category')
+            ->select(['id', 'title', 'category_id', 'description', 'slug', 'image', 'created_at'])
+            ->whereHas('category', fn ($query) => $query->select(['id', 'title'])->where('is_visible', '=', true));
     }
 }

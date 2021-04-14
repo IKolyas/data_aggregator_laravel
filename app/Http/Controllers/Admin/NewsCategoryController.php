@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateCategory;
+use App\Http\Requests\UpdateCategory;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use \Illuminate\Http\RedirectResponse;
 use \Illuminate\Contracts\View\View;
 
@@ -13,34 +14,24 @@ class NewsCategoryController extends Controller
 
     public function index(): View
     {
-        //
-        $categories = Category::select(['id', 'title', 'is_visible', 'created_at' ,'updated_at'])->paginate(10);
+        $categories = Category::list(true)->orderBy('title')->paginate(10);
         return view('admin.news.categories.index', ['categories' => $categories]);
     }
 
 
     public function create(): View
     {
-        //
         return view('admin.news.categories.create');
     }
 
 
-    public function store(Request $request): RedirectResponse
+    public function store(CreateCategory $request): RedirectResponse
     {
-        //
-
-        $validatedData = $request->validate([
-            'title' => ['required', 'string', 'min:3', 'unique:categories'],
-            'is_visible' => ['bool']
-        ]);
-        $allowFields = $request->only('title', 'is_visible');
-        $category = Category::create($allowFields);
-
+        $category = Category::create($request->validated());
         if ($category) {
-            return redirect()->route('admin.categories.index')->with('success', 'Категория успешно добавлена!');
+            return redirect()->route('admin.categories.index')->with('success', __('validation-inline.admin.messages.create.success'));
         }
-        return back()->with('error', 'Произошла ошибка при добавлении категории!');
+        return back()->with('error', __('validation-inline.admin.messages.create.error'));
     }
 
 
@@ -56,31 +47,26 @@ class NewsCategoryController extends Controller
         return view('admin.news.categories.edit', ['category' => $category]);
     }
 
-    public function update(Request $request, Category $category): RedirectResponse
+
+    public function update(UpdateCategory $request, Category $category): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'title' => ['required', 'string', 'min:3'],
-            'is_visible' => ['bool']
-        ]);
-        if (!$request->input('is_visible')) {
-            $request->request->add(['is_visible' => 0]);
+
+        $category = $category->fill($request->validated());
+        if ($category->save()) {
+            return redirect()->route('admin.categories.index')->with('success', __('validation-inline.admin.messages.edit.success'));
         }
-        $allowFields = $request->only('title', 'is_visible');
-        $category = $category->fill($allowFields)->save();
-        if ($category) {
-            return redirect()->route('admin.categories.index')->with('success', 'Изменения успешно приняты!');
-        }
-        return back()->with('error', 'Произошла ошибка при изменении категории!');
+        return back()->with('error', __('validation-inline.admin.messages.edit.error'));
     }
 
-    public function destroy(int $id): RedirectResponse
+
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
         $category = Category::findOrFail($id);
-            try {
-                $category->delete();
-                return redirect()->route('admin.categories.index')->with('access', 'Категория успешно удалена!');
-            } catch (\Exception $e) {
-                return back()->with('error', 'Произошла ошибка при удалении элемента!');
-            }
+        try {
+            $category->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success', false]);
+        }
     }
 }

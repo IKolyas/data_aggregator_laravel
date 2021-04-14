@@ -22,7 +22,6 @@ class NewsFactory extends Factory
     public function definition()
     {
         return [
-            //
         ];
     }
 }

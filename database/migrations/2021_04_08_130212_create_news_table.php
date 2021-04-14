@@ -21,7 +21,7 @@ class CreateNewsTable extends Migration
                 ->cascadeOnUpdate();
             $table->string('title', 128)->nullable();
             $table->string('slug', 128);
-            $table->string('image', 128)->nullable();
+            $table->string('image', 128)->nullable()->default(null);
             $table->text('description')->nullable();
             $table->timestamps();
         });

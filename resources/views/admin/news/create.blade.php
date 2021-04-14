@@ -28,8 +28,7 @@
             </div>
             <div class="form-group">
                 <label for="formImage">Картинка</label>
-                <input type="text" class="form-control" id="formImage" name="image" value="{{ old('image') }}"
-                       required placeholder="Ссылка на картинку">
+                <input type="text" class="form-control" id="formImage" name="image" value="{{ old('image') }}">
             </div>
             <div class="form-group">
                 <label for="formDescription">Текст новости</label>

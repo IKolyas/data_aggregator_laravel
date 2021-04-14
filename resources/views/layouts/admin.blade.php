@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>Панель администратора сайта новостей</title>
-
     <!-- Custom fonts for this template-->
     <link href="{{asset('assets/admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
     <link
@@ -109,3 +108,5 @@
 </body>
 
 </html>
+
+

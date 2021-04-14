@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateNews;
+use App\Http\Requests\UpdateNews;
 use App\Models\Category;
 use App\Models\News;
-use Illuminate\Http\Request;
 use \Illuminate\Contracts\View\View;
 use \Illuminate\Http\RedirectResponse;
 
@@ -14,45 +15,38 @@ class NewsController extends Controller
 
     public function index(): View
     {
-        $newsList = News::with('category')->paginate(10);
+
+        $newsList = News::list(true)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return view('admin.news.index', ['newsList' => $newsList]);
     }
 
+
     public function create(): View
     {
-        //
-        $categories = Category::select(['id', 'title'])->get();
+        $categories = Category::list(true)->get();
         return view('admin.news.create', [
             'categories' => $categories,
         ]);
     }
 
 
-    public function store(Request $request): RedirectResponse
+    public function store(CreateNews $request): RedirectResponse
     {
-        //
-        $request->validate([
-            'category_id' => ['required', 'integer'],
-            'title' => ['required', 'string', 'min:3'],
-            'image' => ['string'],
-            'description' => ['string', 'min:10'],
-
-        ]);
-        $slug = \Str::of(\request()->input('title'))->slug('-');
-        $request->request->add(['slug' => $slug]);
-        $allowFields = $request->only('category_id', 'title', 'slug', 'image', 'description');
-        $news = News::create($allowFields);
-        if ($news) {
-            return redirect()->route('admin.news.index')->with('success', 'Новость успешно добавлена!');
+        $news = new News($request->validated());
+        $category = Category::find($request->validated()['category_id']);
+        if ($category->news()->save($news)) {
+            return redirect()->route('admin.news.index')->with('success', __('validation-inline.admin.messages.create.success'));
         }
-        return back()->with('error', 'Ошибка при добавлении новости');
+        return back()->with('error', __('validation-inline.admin.messages.create.error'));
     }
 
 
-    public function show(int $id): View
+    public function show(News $news): View
     {
+        $news = News::findOrFail($news->id);
 
-        $news = News::findOrFail($id);
         return view('admin.news.show', [
             'news' => $news,
         ]);
@@ -61,7 +55,8 @@ class NewsController extends Controller
 
     public function edit(News $news): View
     {
-        $categories = Category::select(['id', 'title'])->get();
+        $categories = Category::list(true)->get();
+
         return view('admin.news.edit', [
             'news' => $news,
             'categories' => $categories
@@ -69,32 +64,27 @@ class NewsController extends Controller
     }
 
 
-    public function update(Request $request, News $news): RedirectResponse
+    public function update(UpdateNews $request, News $news): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'title' => ['required', 'string', 'min:3'],
-            'category_id' => ['required', 'integer'],
-            'description' => ['string', 'min:10']
-        ]);
-        $slug = \Str::of(\request()->input('title'))->slug('-');
-        $request->request->add(['slug' => $slug]);
-        $allowFields = $request->only('category_id', 'title', 'slug', 'image', 'description');
-        $news = $news->fill($allowFields)->save();
-        if ($news) {
-            return redirect()->route('admin.news.index')->with('success', 'Изменения успешно приняты!');
+        $news = $news->fill($request->validated());
+        $category = Category::find($request->validated()['category_id']);
+
+        if ($category->news()->save($news)) {
+            return redirect()->route('admin.news.index')->with('success', __('validation-inline.admin.messages.edit.success'));
         }
-        return back()->with('error', 'Произошла ошибка при изменении новости!');
+        return back()->with('error', __('validation-inline.admin.messages.edit.error'));
     }
 
 
-    public function destroy(int $id): RedirectResponse
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
-        $news = News::findOrFail($id);
-        try {
-            $news->delete();
-            return redirect()->route('admin.news.index')->with('access', 'Новость успешно удалена!');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Произошла ошибка при удалении элемента!');
-        }
+            $news = News::findOrFail($id);
+
+            try {
+                $news->delete();
+                return response()->json(['success' => true]);
+            } catch (\Exception $e) {
+                return response()->json(['success', false]);
+            }
     }
 }
