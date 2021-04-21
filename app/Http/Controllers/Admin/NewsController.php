@@ -63,7 +63,6 @@ class NewsController extends Controller
         ]);
     }
 
-
     public function update(UpdateNews $request, News $news): RedirectResponse
     {
         $news = $news->fill($request->validated());

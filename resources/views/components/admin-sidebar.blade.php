@@ -13,7 +13,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="{{ route('admin.news.index') }}">
+        <a class="nav-link" href="{{ route('admin.account') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
@@ -27,22 +27,27 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('admin.news.index') }}" data-toggle="collapse" data-target="#collapseTwo"
-           aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Компоненты</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Базовые компоненты:</h6>
-                <a class="collapse-item" href="{{ route('admin.categories.index') }}">Категории</a>
-                <a class="collapse-item" href="{{ route('admin.news.index') }}">Новости</a>
-            </div>
-        </div>
-    </li>
+    @if(Auth::user()->is_admin)
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ route('admin.news.index') }}" data-toggle="collapse"
+               data-target="#collapseTwo"
+               aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Компоненты</span>
+            </a>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Базовые компоненты:</h6>
 
-    <!-- Nav Item - Utilities Collapse Menu -->
+                    <a class="collapse-item" href="{{ route('admin.categories.index') }}">Категории</a>
+                    <a class="collapse-item" href="{{ route('admin.news.index') }}">Новости</a>
+                    <a class="collapse-item" href="{{ route('admin.users.index') }}">Пользователи</a>
+
+                </div>
+            </div>
+        </li>
+    @endif
+<!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
            aria-expanded="true" aria-controls="collapseUtilities">
@@ -115,7 +120,8 @@
     <!-- Sidebar Message -->
     <div class="sidebar-card">
         <img class="sidebar-card-illustration mb-2" src="{{asset('assets/admin/img/undraw_rocket.svg')}}" alt="">
-        <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
+        <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and
+            more!</p>
         <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
     </div>
 

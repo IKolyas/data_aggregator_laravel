@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsCategoryController;
-
-
+use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Admin\NewsCategoryController as AdminNewsCategoryController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,11 +20,17 @@ use App\Http\Controllers\NewsCategoryController;
 */
 
 // for admin
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::resource('/categories', \App\Http\Controllers\Admin\NewsCategoryController::class);
-    Route::resource('/news', \App\Http\Controllers\Admin\NewsController::class);
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'admin'], function () {
+        Route::resource('/categories', AdminNewsCategoryController::class);
+        Route::resource('/news', AdminNewsController::class);
+        Route::resource('/users', AdminUserController::class);
+    });
+    Route::get('admin/account', [AccountController::class, 'index'])->name('admin.account');
 });
 
+
+Route::get('/', [NewsController::class, 'home']);
 Route::get('/categories', [NewsCategoryController::class, 'index']);
 Route::get('/categories/show/{id}', [NewsCategoryController::class, 'show'])->where('id', '\d+')->name('categories.show');
 Route::get('/news', [NewsController::class, 'index'])->name('news');

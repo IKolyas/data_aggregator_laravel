@@ -21,6 +21,11 @@ class NewsController extends Controller
         ]);
     }
 
+    public function home(): View
+    {
+        return view('news.home');
+    }
+
     public function show(int $id): View
     {
         $categories = Category::list()->withCount('news')->get();

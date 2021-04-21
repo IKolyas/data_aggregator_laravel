@@ -36,6 +36,21 @@
                 <label for="formDescription">Текст новости</label>
                 <textarea type="text" class="form-control" id="formDescription" name="description"> {{ $news->description }} </textarea>
             </div>
+            <div class="form-group">
+                <label>Статус</label>
+                @forelse(\App\Enums\StatusNews::STATUSES as $status)
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="{{ $status }}" value="{{ $status }}"
+                               @if ($news->status == $status) checked @endif
+                        >
+                        <label class="form-check-label" for="{{ $status }}">
+                            {{$status}}
+                        </label>
+                    </div>
+                @empty
+                    <option selected>нет категорий ...</option>
+                @endforelse
+            </div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </form>
     </div>

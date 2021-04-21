@@ -13,7 +13,7 @@ class AddDeletedAtColumnNewsTable extends Migration
      */
     public function up()
     {
-        Schema::table('news', function ($table) {
+        Schema::table('news', function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -25,6 +25,6 @@ class AddDeletedAtColumnNewsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropColumns('news', ['deleted_at']);
     }
 }

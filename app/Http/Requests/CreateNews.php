@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\StatusNews;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * @property string slug
@@ -34,6 +36,7 @@ class CreateNews extends FormRequest
             'slug' => 'string',
             'image' => 'nullable|string',
             'description' => 'string|min:10',
+            'status' => ['required', Rule::in(StatusNews::STATUSES)]
         ];
     }
 

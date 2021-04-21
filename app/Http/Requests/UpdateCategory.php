@@ -27,8 +27,8 @@ class UpdateCategory extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'min:3'],
-            'is_visible' => ['sometimes']
+            'title' => 'required|string|min:3',
+            'is_visible' => 'sometimes',
         ];
     }
 

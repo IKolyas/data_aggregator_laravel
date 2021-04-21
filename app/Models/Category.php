@@ -53,8 +53,10 @@ class Category extends Model
         if ($isAdmin) {
             return $query->select(['id', 'title', 'is_visible', 'created_at', 'updated_at']);
         }
-        return $query->select(['id', 'title'])->where('is_visible', '=', true);
-
+        return $query->select(['id', 'title'])
+            ->whereHas('news', fn ($query) => $query->select(['status'])->where('status', '=', 'published'))
+            ->where('is_visible', '=', true);
     }
+
 
 }

@@ -21,6 +21,7 @@
                 <th scope="col">Слаг</th>
                 <th scope="col">Путь к картинке</th>
                 <th scope="col">Картинка</th>
+                <th scope="col">Статус</th>
                 <th scope="col">Дата создания</th>
                 <th scope="col">Дата обновления</th>
                 <th scope="col">Инструменты</th>
@@ -41,13 +42,12 @@
                             <img src="{{$news->image}}" class="rounded" width="100" height="100" alt="{{ $news->title }}">
                         </div>
                     </td>
+                    <td>{{ $news->status }}</td>
                     <td>{{ $news->created_at }}</td>
                     <td>{{ $news->updated_at }}</td>
                     <td>
-                    <td>
                         <a href="{{ route('admin.news.edit', $news) }}"><i class="fa fa-pencil text-success" aria-hidden="true"></i></a>
                         <button type="button" class="btn btn-link" onclick="destroyModel('news', {{ $news->id }})"><i class="fa fa-trash text-danger" aria-hidden="true"></i></button>
-                    </td>
                     </td>
                 </tr>
             @empty
