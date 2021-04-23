@@ -60,10 +60,10 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary mx-2">
                                         {{ __('Login') }}
                                     </button>
-
+                                    <a href="{{ route('vk.init') }}" class="fs-3"><i class="fa fa-vk fa-2x" aria-hidden="true"></i></a>
                                     @if (Route::has('password.request'))
                                         <a class="btn btn-link" href="{{ route('password.request') }}">
                                             {{ __('Forgot Your Password?') }}
@@ -78,3 +78,6 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script src="https://use.fontawesome.com/9a9ee976fc.js"></script>
+@endpush

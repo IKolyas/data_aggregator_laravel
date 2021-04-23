@@ -8,6 +8,8 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Admin\NewsCategoryController as AdminNewsCategoryController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use \App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\Admin\ParserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,6 +31,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('admin/account', [AccountController::class, 'index'])->name('admin.account');
 });
 
+Route::get('/parser', ParserController::class)->name('parser'); // add middleware
+
+Route::group(['middleware' => 'guest', 'prefix' => 'socialite'], function () {
+    Route::get('/auth/vk', [SocialiteController::class, 'init'])->name('vk.init');
+    Route::get('/auth/vk/callback', [SocialiteController::class, 'callback'])->name('vk.callback');
+});
 
 Route::get('/', [NewsController::class, 'home']);
 Route::get('/categories', [NewsCategoryController::class, 'index']);

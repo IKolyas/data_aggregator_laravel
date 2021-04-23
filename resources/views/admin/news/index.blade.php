@@ -58,3 +58,4 @@
             <div>{{$newsList->links()}}</div>
     </div>
 @endsection
+

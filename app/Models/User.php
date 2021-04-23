@@ -49,7 +49,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'is_admin'
+        'is_admin',
+        'avatar',
     ];
 
     /**
@@ -81,7 +82,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query
             ->with('profile')
-            ->select(['id', 'name', 'email', 'created_at', 'updated_at', 'is_admin']);
+            ->select(['id', 'name', 'email', 'avatar', 'created_at', 'updated_at', 'is_admin']);
 
     }
 }
