@@ -9,7 +9,7 @@
                 <div class="alert alert-danger">{{ $error }}</div>
             @endforeach
         @endif
-        <form method="post" action="{{ route( 'admin.news.update', ['news' => $news] ) }}" class="col-8 offset-2">
+        <form method="post" action="{{ route( 'admin.news.update', ['news' => $news] ) }}" class="col-8 offset-2" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -28,9 +28,13 @@
                        required>
             </div>
             <div class="form-group">
-                <label for="formImage">Картинка</label>
-                <input type="text" class="form-control" id="formImage" name="image" value="{{ $news->image }}"
+                <label for="formImageLink">Ссылка на картинку</label>
+                <input type="text" class="form-control" id="formImageLink" name="image" value="{{ $news->image_link }}"
                        placeholder="Ссылка на картинку">
+            </div>
+            <div class="form-group">
+                <input type="file" name="image_path" multiple>
+                <img src="{{ old('image_path') }}" alt="{{ old('image_path') }}" class="mx-2">
             </div>
             <div class="form-group">
                 <label for="formDescription">Текст новости</label>

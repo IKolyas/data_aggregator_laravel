@@ -38,7 +38,8 @@ class UpdateNews extends FormRequest
             'slug' => 'string',
             'category_id' => 'numeric',
             'description' => 'string|min:10',
-            'image' => 'nullable|string',
+            'image_link' => 'nullable|string',
+            'image_path' => 'sometimes|image:jpg,jpeg,png,bmp,gif,svg',
             'status' => Rule::in(StatusNews::STATUSES)
         ];
     }

@@ -34,8 +34,16 @@ class NewsController extends Controller
 
     public function store(CreateNews $request): RedirectResponse
     {
-        $news = new News($request->validated());
-        $category = Category::find($request->validated()['category_id']);
+        $validated = $request->validated();
+        if ($request->hasFile('image_path')) {
+            $image = $request->file('image_path');
+            $originalExt = $image->getClientOriginalExtension();
+            $fileName = uniqid();
+            $fileLink = $image->storeAs('news', $fileName . '.' . $originalExt, 'public');
+            $validated['image_path'] = $fileLink;
+        }
+        $news = new News($validated);
+        $category = Category::find($validated['category_id']);
         if ($category->news()->save($news)) {
             return redirect()->route('admin.news.index')->with('success', __('validation-inline.admin.messages.create.success'));
         }
@@ -77,13 +85,12 @@ class NewsController extends Controller
 
     public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
-            $news = News::findOrFail($id);
-
-            try {
-                $news->delete();
-                return response()->json(['success' => true]);
-            } catch (\Exception $e) {
-                return response()->json(['success', false]);
-            }
+        $news = News::findOrFail($id);
+        try {
+            $news->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success', false]);
+        }
     }
 }

@@ -105,6 +105,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://use.fontawesome.com/9a9ee976fc.js"></script>
 <script src="{{asset('assets/admin/js/destroyModels.js')}}"></script>
+@stack('js')
 </body>
 
 </html>

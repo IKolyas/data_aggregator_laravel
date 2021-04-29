@@ -34,7 +34,8 @@ class CreateNews extends FormRequest
             'category_id' => 'required|numeric',
             'title' => 'required|string|min:3',
             'slug' => 'string',
-            'image' => 'nullable|string',
+            'image_link' => 'nullable|string',
+            'image_path' => 'sometimes|image:jpg,jpeg,png,bmp,gif,svg',
             'description' => 'string|min:10',
             'status' => ['required', Rule::in(StatusNews::STATUSES)]
         ];

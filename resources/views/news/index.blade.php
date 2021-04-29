@@ -9,7 +9,7 @@
             @endif
             <div class="card-body">
                 <h2 class="card-title">{{ $news->title }}</h2>
-                <p class="card-text">{{ substr($news->description, 0, 300) . '...' }}</p>
+                <p class="card-text">{!!  (substr($news->description, 0, 300) . '...') !!}</p>
                 <a href='{{ route('news.show', ['id' => $news->id]) }}' class="btn btn-primary">читать дальше &rarr;</a>
             </div>
             <div class="card-footer text-muted">

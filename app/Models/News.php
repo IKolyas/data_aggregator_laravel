@@ -44,7 +44,7 @@ class News extends Model
     protected $table = 'news';
 
     protected $fillable = [
-         'title', 'slug',  'image', 'description', 'status'
+         'title', 'slug',  'image_link', 'image_path', 'description', 'status'
     ];
 
     //добавил "мягкое удаление" (при удалении в поле deleted_at добавляется дата удаления но сам объект не ужаляется из базы,
@@ -66,11 +66,11 @@ class News extends Model
         if ($isAdmin) {
             return $query
                 ->with('category')
-                ->select(['id', 'category_id', 'title', 'description', 'slug', 'image', 'status', 'created_at', 'updated_at']);
+                ->select(['id', 'category_id', 'title', 'description', 'slug', 'image_link', 'image_path', 'status', 'created_at', 'updated_at']);
         }
         return $query
             ->with('category')
-            ->select(['id', 'title', 'category_id', 'description', 'slug', 'image', 'status', 'created_at'])
+            ->select(['id', 'title', 'category_id', 'description', 'slug', 'image_link', 'image_path', 'status', 'created_at'])
             ->where('status', '=', 'published')
             ->whereHas('category', fn ($query) => $query->select(['id', 'title'])->where('is_visible', '=', true));
     }

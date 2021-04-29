@@ -36,18 +36,21 @@
                         <a href="{{ route('admin.news.show', ['news' => $news]) }}"> {{ $news->title }} </a>
                     </td>
                     <td>{{ $news->slug }}</td>
-                    <td>{{ $news->image }}</td>
+                    <td>{{ $news->image_link ?? Storage::disk('public')->url($news->image_path) }}</td>
                     <td>
                         <div class="text-center">
-                            <img src="{{$news->image}}" class="rounded" width="100" height="100" alt="{{ $news->title }}">
+                            <img src="{{ $news->image_link ?? Storage::disk('public')->url($news->image_path) }}" class="rounded"
+                                 width="100" height="100" alt="{{ $news->title }}">
                         </div>
                     </td>
                     <td>{{ $news->status }}</td>
                     <td>{{ $news->created_at }}</td>
                     <td>{{ $news->updated_at }}</td>
                     <td>
-                        <a href="{{ route('admin.news.edit', $news) }}"><i class="fa fa-pencil text-success" aria-hidden="true"></i></a>
-                        <button type="button" class="btn btn-link" onclick="destroyModel('news', {{ $news->id }})"><i class="fa fa-trash text-danger" aria-hidden="true"></i></button>
+                        <a href="{{ route('admin.news.edit', $news) }}"><i class="fa fa-pencil text-success"
+                                                                           aria-hidden="true"></i></a>
+                        <button type="button" class="btn btn-link" onclick="destroyModel('news', {{ $news->id }})"><i
+                                class="fa fa-trash text-danger" aria-hidden="true"></i></button>
                     </td>
                 </tr>
             @empty
@@ -55,7 +58,7 @@
             @endforelse
             </tbody>
         </table>
-            <div>{{$newsList->links()}}</div>
+        <div>{{$newsList->links()}}</div>
     </div>
 @endsection
 
