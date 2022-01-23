@@ -18,10 +18,12 @@ class ActualUser extends Model
         'email',
         'referral_id',
         'inviting_id',
+        'created_at',
+        'updated_at',
     ];
 
     protected $hidden = [
-        'crated_at',
+        'created_at',
         'updated_at',
     ];
 }

@@ -32,72 +32,84 @@ class CustomerMigrateDataToUser extends Command
         parent::__construct();
     }
 
-
     public function handle(): void
     {
         $customers = Customer::all();
         $count = $customers->count();
-        if ($this->confirm('В таблице "' . (new Customer())->getTable() . '" обнаружено ' . $count . ' записей, подтвердить миграцию?')) {
+        if ($this->migrateConfirmation($count)) {
             $bar = $this->output->createProgressBar($count);
             $errors = collect([]);
+            $this->info("Процесс...");
+            $bar->start();
+            $counter = 0;
+            $time_pre = microtime(true);
             try {
-                $this->info("Процесс...");
-                $bar->start();
-                $time_pre = microtime(true);
-                $counter = 0;
-                foreach ($customers as $customer) {
-                    $phoneValidate = $this->phoneValidate($customer->phone);
-                    $user = ActualUser::where('phone', $phoneValidate)->first();
-                    if(!$phoneValidate) {
-                        $errors->push([$customer->firstname, $customer->lastname, $customer->phone . ' (не валидный)', $customer->email]);
-                    } elseif ($user) {
-                        $errors->push([$customer->firstname, $customer->lastname, $customer->phone . ' (дубликат)', $customer->email]);
-                    } else {
-                        ActualUser::factory()->count(1)->create([
-                            'firstname' => $customer->firstname,
-                            'lastname' => $customer->lastname,
-                            'phone' => $phoneValidate,
-                            'email' => $customer->email,
-                        ]);
-                        $counter++;
-                    }
-                    $bar->advance();
-                }
-
-                $time_post = microtime(true);
-                $exec_time = $time_post - $time_pre;
-                $bar->finish();
-                $this->newLine();
-                $this->info("Миграция данных завершенена!");
-                $this->newLine();
-                $this->table(
-                    ['Строк добавлено', 'Не прошло валидацию', 'Время выполнения, с.'],
-                    [[$counter, $errors->count(), $exec_time]]
-                );
-                if($errors->count() > 0) {
-                    $this->newLine();
-                    $this->info("Строки не прошедшие валидацию!");
-                    $this->table(
-                        ['firstname', 'lastname', 'phone', 'email'],
-                        $errors->toArray(),
-                    );
-                }
-
+                $this->dataTransfer($customers, $errors, $counter, $bar);
             } catch (\Exception $e) {
                 $this->error('Ошибка при миграции данных ');
                 $this->newLine();
                 $this->error($e);
             }
-
-//        ActualUser::factory()->count($count)->make();
-//        return 0;
+            $time_post = microtime(true);
+            $bar->finish();
+            $exec_time = $time_post - $time_pre;
+            $this->sendResultInfo($errors, $counter, $exec_time);
         }
     }
 
-    private function phoneValidate($phone)
+    private function sendResultInfo($errors, $counter, $exec_time): void
+    {
+        $this->newLine(2);
+        $this->info("Миграция данных завершенена!");
+        $this->table(
+            ['Строк добавлено', '<error>Не прошло валидацию</error>', 'Время выполнения, с.'],
+            [[$counter, '<fg=red>' . $errors->count() . '</>', $exec_time]]
+        );
+        if ($errors->count() > 0) {
+            if ($this->confirm('<fg=yellow>Отобразить строки не прошедшие валидацию?</>')) {
+                $this->newLine();
+                $this->info("<error>Строки не прошедшие валидацию!</error>");
+                $this->table(
+                    ['firstname', 'lastname', 'phone', 'email'],
+                    $errors->toArray(),
+                );
+            }
+        }
+    }
+
+    private function dataTransfer($customers, &$errors, &$counter, &$bar): void
+    {
+        foreach ($customers as $customer) {
+            $phoneValidate = $this->phoneValidate($customer->phone);
+            $user = ActualUser::where('phone', $phoneValidate)->first();
+            if (!$phoneValidate) {
+                $errors->push([$customer->firstname, $customer->lastname, '<fg=red>' . $customer->phone . '</>' . ' <error>(не валидный)</error>', $customer->email]);
+            } elseif ($user) {
+                $errors->push([$customer->firstname, $customer->lastname, '<fg=red>' . $customer->phone . '</>' . ' <error>(дубликат)</error>', $customer->email]);
+            } else {
+                ActualUser::factory()->create([
+                    'firstname' => $customer->firstname,
+                    'lastname' => $customer->lastname,
+                    'phone' => $phoneValidate,
+                    'email' => $customer->email,
+                    'created_at' => NOW(),
+                    'updated_at' => NOW(),
+                ]);
+                $counter++;
+            }
+            $bar->advance();
+        }
+    }
+
+    private function migrateConfirmation($count): bool
+    {
+        return $this->confirm('<fg=yellow>В таблице обнаружено ' . $count . ' записей, подтвердить миграцию?</>');
+    }
+
+    private function phoneValidate($phone): ?string
     {
         $phone = substr(preg_replace('![^0-9]+!', '', $phone), -10);
-        if($phone && strlen($phone) === 10) return $phone;
+        if ($phone && strlen($phone) === 10) return $phone;
         return false;
     }
 }
