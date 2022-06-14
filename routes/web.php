@@ -38,7 +38,7 @@ Route::group(['middleware' => 'guest', 'prefix' => 'socialite'], function () {
     Route::get('/auth/vk/callback', [SocialiteController::class, 'callback'])->name('vk.callback');
 });
 
-Route::get('/', [NewsController::class, 'home']);
+Route::get('/', [NewsController::class, 'home'])->middleware('recaptcha');
 Route::get('/categories', [NewsCategoryController::class, 'index']);
 Route::get('/categories/show/{id}', [NewsCategoryController::class, 'show'])->where('id', '\d+')->name('categories.show');
 Route::get('/news', [NewsController::class, 'index'])->name('news');
